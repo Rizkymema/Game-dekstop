@@ -4,7 +4,7 @@ Kantor kecil di atas taskbar Windows, berisi tim agen AI yang bekerja bersamamu.
 
 ## Cara pakai
 
-1. Unduh `Agen-Mini-<versi>.exe` dari halaman Releases repo ini, lalu klik dua kali. Tidak perlu instal.
+1. Unduh `Agen-Mini.exe` dari halaman [Releases](../../../releases) repo ini, simpan di folder tetap (misalnya Documents), lalu klik dua kali. Tidak perlu instal.
 2. Kalau muncul **"Windows protected your PC"**, klik **More info** lalu **Run anyway**.
 3. Kantor muncul di bagian bawah layar, tepat di atas taskbar. Ikon robot juga ada di system tray.
 
@@ -33,9 +33,13 @@ Area layar di luar kantor, papan, dan panel tetap bisa diklik seperti biasa.
 
 Buka panel, sembunyikan, posisi kantor (kiri/tengah/kanan), hitung klik mouse, sembunyi saat share screen, pomodoro 25/5 (tim ikut istirahat), jalan saat Windows menyala, mulai ulang progres, dan keluar.
 
+## Update otomatis
+
+Game mengecek versi baru di GitHub Releases saat dibuka dan setiap 3 jam, mengunduhnya di latar belakang, lalu memasangnya saat game ditutup. Bisa juga dipasang langsung lewat tombol **Pasang dan buka ulang** di panel atau menu tray. File `.exe` lama ditimpa di tempat yang sama dan progres tetap tersimpan.
+
 ## Privasi
 
-Aplikasi hanya **menghitung jumlah** ketukan dan klik. Tombol apa yang ditekan tidak pernah disimpan, dicatat, atau dikirim ke mana pun, dan aplikasi tidak memakai internet. Progres tersimpan di `%APPDATA%\Agen Mini\simpanan.json`.
+Aplikasi hanya **menghitung jumlah** ketukan dan klik. Tombol apa yang ditekan tidak pernah disimpan, dicatat, atau dikirim ke mana pun. Satu-satunya akses internet adalah mengecek dan mengunduh versi baru dari GitHub. Progres tersimpan di `%APPDATA%\Agen Mini\simpanan.json`.
 
 ## Untuk developer
 
@@ -53,6 +57,7 @@ npm run dist       # buat .exe Windows di folder dist/
 | --- | --- |
 | `src/main.js` | Jendela transparan, hitung ketukan global, tray, tombol pintas |
 | `src/preload.js` | Jembatan aman antara proses utama dan tampilan |
+| `src/pembaruan.js` | Update otomatis dari GitHub Releases |
 | `src/kantor.js` | Logika game: agen, kartu tugas, misi, kantor, harga upgrade |
 | `src/sprite.js` | Gambar pixel art: robot, meja, kartu, roket, lantai |
 | `src/renderer.js` | HUD, panel, klik, dan animasi |

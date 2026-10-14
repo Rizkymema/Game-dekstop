@@ -1,9 +1,12 @@
 'use strict';
 const {
-  app, BrowserWindow, screen, ipcMain, globalShortcut, Tray, Menu, nativeImage, dialog,
+  app, BrowserWindow, screen, ipcMain, globalShortcut, Tray, Menu, nativeImage, dialog, net,
 } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const { spawn } = require('child_process');
+const { buatPembaruan } = require('./pembaruan');
+const paket = require('../package.json');
 
 // Hook keyboard & mouse global. Hanya MENGHITUNG aksi: tombol mana yang ditekan
 // tidak pernah disimpan, dicatat, atau dikirim ke mana pun.
@@ -33,6 +36,9 @@ const filePengaturan = () => path.join(app.getPath('userData'), 'pengaturan.json
 let win = null;
 let tray = null;
 let siapKeluar = false;
+let pembaruan = null;
+let infoPembaruan = null; // { jenis: 'siap', versi } saat versi baru sudah diunduh
+let versiSebelum = null;
 let settings = { posisi: 'kanan', hitungKlik: true, antiShare: true, pomodoro: false };
 
 let aksiTertunda = 0;
@@ -148,6 +154,32 @@ async function konfirmasiReset() {
   if (response === 1) kirim('reset');
 }
 
+// ---------- Update otomatis dari GitHub ----------
+function kabariPembaruan(info) {
+  if (info.jenis === 'siap') {
+    const baru = !infoPembaruan || infoPembaruan.versi !== info.versi;
+    infoPembaruan = info;
+    perbaruiMenu();
+    if (baru && tray) {
+      tray.displayBalloon({
+        title: paket.productName,
+        content: `Versi ${info.versi} siap. Klik untuk memasang sekarang, atau biarkan terpasang otomatis saat game ditutup.`,
+      });
+    }
+  }
+  kirim('pembaruan', info);
+}
+
+function pasangUpdate() {
+  if (!pembaruan || !infoPembaruan) return;
+  const hasil = pembaruan.pasangSekarang();
+  if (!hasil.ok) {
+    kirim('pembaruan', { jenis: 'gagal', pesan: hasil.alasan });
+    return;
+  }
+  app.quit(); // pemasang dijalankan di 'will-quit', lalu game dibuka lagi
+}
+
 function centang(label, kunci, setelah) {
   return {
     label,
@@ -167,6 +199,9 @@ function perbaruiMenu() {
   const terlihat = win && win.isVisible();
   tray.setContextMenu(
     Menu.buildFromTemplate([
+      ...(infoPembaruan
+        ? [{ label: `Pasang versi ${infoPembaruan.versi} sekarang`, click: pasangUpdate }, { type: 'separator' }]
+        : []),
       { label: 'Buka panel  (Ctrl+Alt+P)', click: bukaPanel },
       { label: terlihat ? 'Sembunyikan  (Ctrl+Alt+H)' : 'Tampilkan  (Ctrl+Alt+H)', click: toggleTampil },
       { type: 'separator' },
@@ -195,6 +230,9 @@ function perbaruiMenu() {
         },
       },
       { type: 'separator' },
+      { label: `Versi ${app.getVersion()}`, enabled: false },
+      { label: 'Cek update sekarang', click: () => pembaruan && pembaruan.cek(true) },
+      { type: 'separator' },
       { label: 'Mulai ulang progres…', click: konfirmasiReset },
       { label: 'Keluar  (Ctrl+Alt+Q)', click: () => app.quit() },
     ]),
@@ -205,6 +243,7 @@ function buatTray() {
   tray = new Tray(nativeImage.createFromPath(path.join(ASET, 'tray.png')));
   tray.setToolTip('Agen Mini');
   tray.on('click', bukaPanel);
+  tray.on('balloon-click', pasangUpdate);
   perbaruiMenu();
 }
 
@@ -245,6 +284,13 @@ setInterval(() => {
 
 ipcMain.handle('muat', () => bacaJSON(fileSimpanan(), null));
 ipcMain.handle('pengaturan', () => settings);
+ipcMain.handle('info-awal', () => ({
+  versi: app.getVersion(),
+  diperbarui: versiSebelum && versiSebelum !== app.getVersion() ? app.getVersion() : null,
+  pembaruan: infoPembaruan,
+}));
+ipcMain.on('pasang-update', pasangUpdate);
+ipcMain.on('cek-update', () => pembaruan && pembaruan.cek(true));
 ipcMain.on('simpan', (_e, data) => tulisJSON(fileSimpanan(), data));
 ipcMain.on('tembus-klik', (_e, aktif) => {
   if (win && !win.isDestroyed()) win.setIgnoreMouseEvents(!!aktif, { forward: true });
@@ -276,10 +322,18 @@ app.on('window-all-closed', () => {
 
 app.whenReady().then(() => {
   if (!kunciTunggal) return;
-  settings = { ...settings, ...bacaJSON(filePengaturan(), {}) };
+  const tersimpan = bacaJSON(filePengaturan(), {});
+  versiSebelum = tersimpan.versiTerakhir || null;
+  settings = { ...settings, ...tersimpan };
+  settings.versiTerakhir = app.getVersion();
+  tulisJSON(filePengaturan(), settings);
   buatJendela();
   buatTray();
   mulaiHook();
+  pembaruan = buatPembaruan({
+    app, net, spawn, repo: paket.pembaruan.repo, awalan: paket.pembaruan.awalan, kabari: kabariPembaruan,
+  });
+  pembaruan.mulai();
   globalShortcut.register('Control+Alt+H', toggleTampil);
   globalShortcut.register('Control+Alt+P', bukaPanel);
   globalShortcut.register('Control+Alt+Q', () => app.quit());
@@ -289,6 +343,7 @@ app.whenReady().then(() => {
 });
 
 app.on('will-quit', () => {
+  if (pembaruan) pembaruan.jalankanPemasang();
   globalShortcut.unregisterAll();
   if (uIOhook) {
     try {

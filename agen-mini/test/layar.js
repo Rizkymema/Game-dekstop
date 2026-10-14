@@ -30,7 +30,12 @@ const contoh = skenario === 'awal' ? null : {
 
 ipcMain.handle('muat', () => contoh);
 ipcMain.handle('pengaturan', () => ({ posisi: 'kanan', hitungKlik: true, antiShare: true, pomodoro: skenario !== 'awal' }));
-for (const k of ['simpan', 'tembus-klik', 'sembunyikan', 'siap-keluar']) ipcMain.on(k, () => {});
+ipcMain.handle('info-awal', () => ({
+  versi: require('../package.json').version,
+  diperbarui: null,
+  pembaruan: skenario === 'panel' ? { jenis: 'siap', versi: '9.9.9' } : null,
+}));
+for (const k of ['simpan', 'tembus-klik', 'sembunyikan', 'siap-keluar', 'pasang-update', 'cek-update']) ipcMain.on(k, () => {});
 
 const tunggu = (ms) => new Promise((r) => setTimeout(r, ms));
 

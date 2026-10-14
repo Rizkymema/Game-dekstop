@@ -600,6 +600,46 @@
     }
   }
 
+  // ---------- Update otomatis ----------
+  const elUpdate = {
+    kotak: document.getElementById('pembaruan'),
+    teks: document.getElementById('pembaruanTeks'),
+    pasang: document.getElementById('pasangUpdate'),
+    versi: document.getElementById('versi'),
+    cek: document.getElementById('cekUpdate'),
+  };
+  function tampilkanUpdate(versi) {
+    elUpdate.teks.textContent = `Versi ${versi} sudah diunduh. Kalau tidak dipasang sekarang, otomatis terpasang saat game ditutup.`;
+    elUpdate.kotak.hidden = false;
+    if (!el.panel.hidden) posisikanPanel();
+  }
+  elUpdate.pasang.addEventListener('click', () => {
+    elUpdate.pasang.disabled = true;
+    elUpdate.pasang.textContent = 'Memasang...';
+    desk.pasangUpdate();
+  });
+  elUpdate.cek.addEventListener('click', () => desk.cekUpdate());
+  desk.onPembaruan((info) => {
+    if (info.jenis === 'siap') {
+      tampilkanUpdate(info.versi);
+      pesan(`Versi ${info.versi} siap dipasang. Buka panel untuk memasang.`, { durasi: 5000 });
+    } else if (info.jenis === 'mengunduh') {
+      pesan(`Mengunduh versi ${info.versi}...`);
+    } else if (info.jenis === 'terbaru') {
+      pesan(`Sudah versi terbaru (${info.versi}).`);
+    } else if (info.jenis === 'gagal') {
+      elUpdate.pasang.disabled = false;
+      elUpdate.pasang.textContent = 'Pasang dan buka ulang';
+      pesan(`Update belum berhasil: ${info.pesan}`, { durasi: 6000 });
+    } else if (info.jenis === 'tidak-aktif') {
+      pesan('Update otomatis hanya berjalan di file .exe yang diunduh dari GitHub.', { durasi: 5000 });
+    }
+  });
+  const infoAwal = await desk.infoAwal();
+  elUpdate.versi.textContent = `Versi ${infoAwal.versi}.`;
+  if (infoAwal.pembaruan) tampilkanUpdate(infoAwal.pembaruan.versi);
+  if (infoAwal.diperbarui) pesan(`Diperbarui ke versi ${infoAwal.diperbarui}.`, { durasi: 5000 });
+
   // ---------- Mulai ----------
   bangunTim();
   const off = K.offline(s, Date.now());

@@ -1,7 +1,7 @@
 {
   "name": "cicak-ngoding",
   "productName": "Cicak Ngoding",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Cicak peliharaan desktop yang jalan-jalan di layar dan ngoding dari ketikanmu",
   "main": "src/main.js",
   "author": "Cicak Ngoding",
@@ -9,7 +9,7 @@
   "private": true,
   "scripts": {
     "start": "electron .",
-    "test": "node test/game.test.js && node test/dunia.test.js",
+    "test": "node test/game.test.js && node test/dunia.test.js && node test/pembaruan.test.js",
     "dist": "electron-builder --win --x64"
   },
   "dependencies": {
@@ -44,7 +44,7 @@
         }
       ],
       "icon": "assets/icon.ico",
-      "artifactName": "Cicak-Ngoding-${version}.${ext}"
+      "artifactName": "Cicak-Ngoding.${ext}"
     },
     "nsis": {
       "oneClick": false,
@@ -63,8 +63,16 @@
       "en-US"
     ],
     "portable": {
-      "artifactName": "Cicak-Ngoding-${version}.exe",
+      "artifactName": "Cicak-Ngoding.exe",
       "unpackDirName": "cicak-ngoding"
     }
+  },
+  "pembaruan": {
+    "repo": "Rizkymema/Game-dekstop",
+    "awalan": "cicak-ngoding"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rizkymema/Game-dekstop.git"
   }
 }

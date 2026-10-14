@@ -1,7 +1,7 @@
 {
   "name": "agen-mini",
   "productName": "Agen Mini",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Kantor kecil berisi tim agen AI yang bekerja bersamamu di atas taskbar",
   "main": "src/main.js",
   "author": "Agen Mini",
@@ -9,7 +9,7 @@
   "private": true,
   "scripts": {
     "start": "electron .",
-    "test": "node test/kantor.test.js",
+    "test": "node test/kantor.test.js && node test/pembaruan.test.js",
     "dist": "electron-builder --win --x64"
   },
   "dependencies": {
@@ -44,7 +44,7 @@
         }
       ],
       "icon": "assets/icon.ico",
-      "artifactName": "Agen-Mini-${version}.${ext}"
+      "artifactName": "Agen-Mini.${ext}"
     },
     "nsis": {
       "oneClick": false,
@@ -63,8 +63,16 @@
       "en-US"
     ],
     "portable": {
-      "artifactName": "Agen-Mini-${version}.exe",
+      "artifactName": "Agen-Mini.exe",
       "unpackDirName": "agen-mini"
     }
+  },
+  "pembaruan": {
+    "repo": "Rizkymema/Game-dekstop",
+    "awalan": "agen-mini"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rizkymema/Game-dekstop.git"
   }
 }

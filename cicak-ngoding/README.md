@@ -4,7 +4,7 @@ Cicak peliharaan di layar laptop Windows. Ia jalan-jalan di atas taskbar, seseka
 
 ## Cara pakai
 
-1. Unduh `Cicak-Ngoding-<versi>.exe` dari halaman Releases repo ini, lalu klik dua kali. Tidak perlu instal; pembukaan pertama butuh beberapa detik.
+1. Unduh `Cicak-Ngoding.exe` dari halaman [Releases](../../../releases) repo ini, simpan di folder tetap (misalnya Documents), lalu klik dua kali. Tidak perlu instal.
 2. Kalau muncul **"Windows protected your PC"**, klik **More info** lalu **Run anyway**.
 3. Cicak muncul di bagian bawah layar. Ikon cicak juga ada di system tray dekat jam.
 
@@ -33,9 +33,13 @@ Area layar selain cicak, nyamuk, dan panel tetap bisa diklik seperti biasa.
 
 Buka panel, sembunyikan cicak, boleh memanjat dinding (matikan kalau cicak sebaiknya di bawah saja), hitung klik mouse, sembunyi saat share screen, pomodoro 25/5, jalan saat Windows menyala, mulai ulang progres, dan keluar.
 
+## Update otomatis
+
+Game mengecek versi baru di GitHub Releases saat dibuka dan setiap 3 jam, mengunduhnya di latar belakang, lalu memasangnya saat game ditutup. Bisa juga dipasang langsung lewat tombol **Pasang dan buka ulang** di panel atau menu tray. File `.exe` lama ditimpa di tempat yang sama dan progres tetap tersimpan.
+
 ## Privasi
 
-Game hanya **menghitung jumlah** ketukan dan klik. Tombol apa yang ditekan tidak pernah disimpan, dicatat, atau dikirim ke mana pun, dan game ini tidak memakai internet. Progres tersimpan di `%APPDATA%\Cicak Ngoding\simpanan.json`.
+Game hanya **menghitung jumlah** ketukan dan klik. Tombol apa yang ditekan tidak pernah disimpan, dicatat, atau dikirim ke mana pun. Satu-satunya akses internet adalah mengecek dan mengunduh versi baru dari GitHub. Progres tersimpan di `%APPDATA%\Cicak Ngoding\simpanan.json`.
 
 Ketikan di aplikasi yang dijalankan "Run as administrator" tidak terhitung karena dibatasi Windows.
 
@@ -56,6 +60,6 @@ npm test           # tes logika game dan perilaku cicak
 npm run dist       # buat .exe Windows di folder dist/
 ```
 
-Struktur: `src/main.js` (jendela, hook global, tray), `src/preload.js` (jembatan aman), `src/game.js` (koin, proyek, upgrade), `src/dunia.js` (perilaku cicak), `src/cicak.js` (gambar pixel art), `src/renderer.js` (panel dan interaksi).
+Struktur: `src/main.js` (jendela, hook global, tray), `src/preload.js` (jembatan aman), `src/pembaruan.js` (update otomatis dari GitHub), `src/game.js` (koin, proyek, upgrade), `src/dunia.js` (perilaku cicak), `src/cicak.js` (gambar pixel art), `src/renderer.js` (panel dan interaksi).
 
 Font: VT323 (SIL Open Font License, lihat `src/font/OFL-VT323.txt`).

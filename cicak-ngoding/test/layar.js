@@ -32,14 +32,19 @@ const contoh = {
 
 ipcMain.handle('muat', () => contoh);
 ipcMain.handle('pengaturan', () => ({ panjat: true, hitungKlik: true, antiShare: true, pomodoro: true }));
-for (const k of ['simpan', 'tembus-klik', 'sembunyikan', 'siap-keluar']) ipcMain.on(k, () => {});
+ipcMain.handle('info-awal', () => ({
+  versi: require('../package.json').version,
+  diperbarui: null,
+  pembaruan: skenario === 'panel' ? { jenis: 'siap', versi: '9.9.9' } : null,
+}));
+for (const k of ['simpan', 'tembus-klik', 'sembunyikan', 'siap-keluar', 'pasang-update', 'cek-update']) ipcMain.on(k, () => {});
 
 const tunggu = (ms) => new Promise((r) => setTimeout(r, ms));
 
 app.whenReady().then(async () => {
   const win = new BrowserWindow({
     width: 1000,
-    height: 560,
+    height: skenario === 'panel' ? 720 : 560,
     backgroundColor: latar,
     frame: false,
     webPreferences: {
