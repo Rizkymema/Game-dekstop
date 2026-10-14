@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:">
+  <title>Cicak Ngoding</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="layar"></canvas>
+  <div id="pesan" aria-live="polite"></div>
+
+  <section id="panel" hidden aria-label="Panel Cicak Ngoding">
+    <div class="bingkai">
+      <div class="isi">
+        <header class="kepala">
+          <div class="dompet">
+            <svg class="koin" viewBox="0 0 8 8" width="18" height="18" aria-hidden="true"><use href="#ikon-koin"/></svg>
+            <b id="koin">0</b>
+            <span class="satuan">koin</span>
+          </div>
+          <span id="pomo" class="pomo" hidden></span>
+          <button id="tutup" class="tutup" type="button" aria-label="Tutup panel">&times;</button>
+        </header>
+        <p class="laju"><span id="laju">1 BK tiap ketukan</span><span id="hari">0 ketukan dan klik hari ini</span></p>
+
+        <div id="proyek" class="daftar-proyek"></div>
+        <div class="pemisah" aria-hidden="true"></div>
+        <div id="toko" class="toko"></div>
+
+        <p class="petunjuk">Seret cicak untuk memindahkannya. Ctrl+Alt+H menyembunyikan, Ctrl+Alt+P membuka panel ini.</p>
+      </div>
+    </div>
+  </section>
+
+  <svg class="sprite-def" width="0" height="0" aria-hidden="true">
+    <defs>
+      <g id="ikon-koin" shape-rendering="crispEdges">
+        <rect x="2" y="0" width="4" height="1" fill="#8a5d0c"/>
+        <rect x="1" y="1" width="1" height="1" fill="#8a5d0c"/>
+        <rect x="6" y="1" width="1" height="1" fill="#8a5d0c"/>
+        <rect x="0" y="2" width="1" height="4" fill="#8a5d0c"/>
+        <rect x="7" y="2" width="1" height="4" fill="#8a5d0c"/>
+        <rect x="1" y="6" width="1" height="1" fill="#8a5d0c"/>
+        <rect x="6" y="6" width="1" height="1" fill="#8a5d0c"/>
+        <rect x="2" y="7" width="4" height="1" fill="#8a5d0c"/>
+        <rect x="2" y="1" width="4" height="6" fill="#e9ad2f"/>
+        <rect x="1" y="2" width="6" height="4" fill="#e9ad2f"/>
+        <rect x="2" y="2" width="2" height="1" fill="#fbe08a"/>
+        <rect x="2" y="3" width="1" height="1" fill="#fbe08a"/>
+        <rect x="4" y="3" width="1" height="2" fill="#b98110"/>
+      </g>
+    </defs>
+  </svg>
+
+  <script src="game.js"></script>
+  <script src="dunia.js"></script>
+  <script src="cicak.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>

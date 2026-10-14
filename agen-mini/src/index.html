@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:">
+  <title>Agen Mini</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="layar"></canvas>
+  <div id="pesan" aria-live="polite"></div>
+
+  <button id="hud" class="hud" type="button" aria-label="Buka panel Agen Mini">
+    <span id="hudKantor" class="hud-kantor">Garasi</span>
+    <span id="hudMisi" class="hud-misi">Misi 1 · 0/10</span>
+    <span class="hud-daya" title="Daya tim naik saat kamu mengetik"><span id="hudDaya" class="isi"></span></span>
+    <span class="hud-token"><svg viewBox="0 0 8 8" width="12" height="12" aria-hidden="true"><use href="#ikon-token"/></svg><b id="hudToken">0</b></span>
+  </button>
+
+  <section id="panel" class="panel" hidden aria-label="Panel Agen Mini">
+    <div class="papan">
+      <header class="kepala kertas">
+        <div class="dompet">
+          <svg viewBox="0 0 8 8" width="20" height="20" aria-hidden="true"><use href="#ikon-token"/></svg>
+          <b id="token">0</b>
+          <span class="satuan">token</span>
+        </div>
+        <span id="pomo" class="pomo" hidden></span>
+        <button id="tutup" class="tutup" type="button" aria-label="Tutup panel">&times;</button>
+      </header>
+
+      <div class="daya-baris">
+        <span>Daya tim</span>
+        <span class="bar-daya"><span id="daya" class="isi"></span></span>
+        <span id="hari" class="pudar">0 ketukan hari ini</span>
+      </div>
+
+      <section class="kertas kantor">
+        <div class="kantor-atas">
+          <b id="namaKantor">Garasi</b>
+          <span id="misi" class="pudar">Misi ke-1</span>
+        </div>
+        <div id="kotakTugas" class="kotak-tugas" aria-label="Tugas dalam misi ini"></div>
+        <div id="daftarKantor" class="daftar-kantor"></div>
+        <button id="sewa" class="tombol sewa" type="button"></button>
+      </section>
+
+      <div id="tim" class="tim"></div>
+
+      <section class="kertas perangkat">
+        <button id="gpu" class="tombol-baris" type="button"></button>
+        <button id="memori" class="tombol-baris" type="button"></button>
+      </section>
+
+      <p class="petunjuk">Klik agen untuk menyemangatinya. Mengetik di aplikasi mana pun menambah daya tim. Ctrl+Alt+P membuka panel ini.</p>
+    </div>
+  </section>
+
+  <svg class="sprite-def" width="0" height="0" aria-hidden="true">
+    <defs>
+      <g id="ikon-token" shape-rendering="crispEdges">
+        <rect x="2" y="0" width="4" height="1" fill="#8a5d0c"/>
+        <rect x="1" y="1" width="1" height="1" fill="#8a5d0c"/>
+        <rect x="6" y="1" width="1" height="1" fill="#8a5d0c"/>
+        <rect x="0" y="2" width="1" height="4" fill="#8a5d0c"/>
+        <rect x="7" y="2" width="1" height="4" fill="#8a5d0c"/>
+        <rect x="1" y="6" width="1" height="1" fill="#8a5d0c"/>
+        <rect x="6" y="6" width="1" height="1" fill="#8a5d0c"/>
+        <rect x="2" y="7" width="4" height="1" fill="#8a5d0c"/>
+        <rect x="2" y="1" width="4" height="6" fill="#e9ad2f"/>
+        <rect x="1" y="2" width="6" height="4" fill="#e9ad2f"/>
+        <rect x="2" y="2" width="2" height="1" fill="#fbe08a"/>
+        <rect x="3" y="3" width="2" height="2" fill="#8a5d0c"/>
+      </g>
+    </defs>
+  </svg>
+
+  <script src="kantor.js"></script>
+  <script src="sprite.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>

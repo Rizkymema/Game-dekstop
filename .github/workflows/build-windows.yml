@@ -1,0 +1,80 @@
+name: Build game Windows
+
+# Membangun .exe Windows untuk setiap folder game (folder yang berisi package.json),
+# lalu menaruhnya di Releases dengan tag <folder>-v<versi>.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  daftar:
+    name: Cari folder game
+    runs-on: ubuntu-latest
+    outputs:
+      game: ${{ steps.cari.outputs.game }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: cari
+        run: |
+          daftar=$(for d in */; do d=${d%/}; [ -f "$d/package.json" ] && echo "$d"; done | jq -R . | jq -cs .)
+          echo "Ditemukan: $daftar"
+          echo "game=$daftar" >> "$GITHUB_OUTPUT"
+
+  build:
+    name: Build ${{ matrix.game }}
+    needs: daftar
+    if: needs.daftar.outputs.game != '[]'
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        game: ${{ fromJson(needs.daftar.outputs.game) }}
+    defaults:
+      run:
+        working-directory: ${{ matrix.game }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ${{ matrix.game }}/package-lock.json
+
+      - name: Pasang dependensi
+        run: npm ci
+
+      - name: Jalankan tes
+        run: npm test --if-present
+
+      - name: Build .exe
+        run: npx electron-builder --win --x64 --publish never
+
+      - name: Baca versi
+        id: versi
+        shell: bash
+        run: echo "versi=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Simpan hasil build
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.game }}-v${{ steps.versi.outputs.versi }}
+          path: ${{ matrix.game }}/dist/*.exe
+          if-no-files-found: error
+
+      - name: Terbitkan di Releases
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ matrix.game }}-v${{ steps.versi.outputs.versi }}
+          name: ${{ matrix.game }} v${{ steps.versi.outputs.versi }}
+          target_commitish: ${{ github.sha }}
+          body: |
+            Unduh file `.exe` di bawah, lalu klik dua kali untuk menjalankan.
+            Kalau muncul "Windows protected your PC", klik More info lalu Run anyway.
+          files: ${{ matrix.game }}/dist/*.exe
+          fail_on_unmatched_files: true

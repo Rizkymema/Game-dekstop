@@ -1,0 +1,70 @@
+{
+  "name": "agen-mini",
+  "productName": "Agen Mini",
+  "version": "1.0.0",
+  "description": "Kantor kecil berisi tim agen AI yang bekerja bersamamu di atas taskbar",
+  "main": "src/main.js",
+  "author": "Agen Mini",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "test": "node test/kantor.test.js",
+    "dist": "electron-builder --win --x64"
+  },
+  "dependencies": {
+    "uiohook-napi": "^1.5.5"
+  },
+  "devDependencies": {
+    "electron": "^44.7.2",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "id.agenmini.app",
+    "productName": "Agen Mini",
+    "asar": false,
+    "npmRebuild": false,
+    "files": [
+      "src/**/*",
+      "assets/*.png",
+      "assets/*.ico",
+      "package.json",
+      "node_modules/uiohook-napi/**/*"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico",
+      "artifactName": "Agen-Mini-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Cicak Ngoding",
+      "runAfterFinish": true,
+      "installerIcon": "assets/icon.ico",
+      "uninstallerIcon": "assets/icon.ico",
+      "artifactName": "Cicak-Ngoding-Setup-${version}.exe"
+    },
+    "electronLanguages": [
+      "id",
+      "en-US"
+    ],
+    "portable": {
+      "artifactName": "Agen-Mini-${version}.exe",
+      "unpackDirName": "agen-mini"
+    }
+  }
+}

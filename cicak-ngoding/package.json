@@ -1,0 +1,70 @@
+{
+  "name": "cicak-ngoding",
+  "productName": "Cicak Ngoding",
+  "version": "1.1.0",
+  "description": "Cicak peliharaan desktop yang jalan-jalan di layar dan ngoding dari ketikanmu",
+  "main": "src/main.js",
+  "author": "Cicak Ngoding",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "test": "node test/game.test.js && node test/dunia.test.js",
+    "dist": "electron-builder --win --x64"
+  },
+  "dependencies": {
+    "uiohook-napi": "^1.5.5"
+  },
+  "devDependencies": {
+    "electron": "^44.7.2",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "id.cicakngoding.app",
+    "productName": "Cicak Ngoding",
+    "asar": false,
+    "npmRebuild": false,
+    "files": [
+      "src/**/*",
+      "assets/*.png",
+      "assets/*.ico",
+      "package.json",
+      "node_modules/uiohook-napi/**/*"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico",
+      "artifactName": "Cicak-Ngoding-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Cicak Ngoding",
+      "runAfterFinish": true,
+      "installerIcon": "assets/icon.ico",
+      "uninstallerIcon": "assets/icon.ico",
+      "artifactName": "Cicak-Ngoding-Setup-${version}.exe"
+    },
+    "electronLanguages": [
+      "id",
+      "en-US"
+    ],
+    "portable": {
+      "artifactName": "Cicak-Ngoding-${version}.exe",
+      "unpackDirName": "cicak-ngoding"
+    }
+  }
+}
